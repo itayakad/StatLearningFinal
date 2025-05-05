@@ -1,74 +1,71 @@
 # StatLearningFinal
 
-**StatLearningFinal** is a machine learning project that predicts whether a stock's price will go **up or down** based on recent **news sentiment and technical data**.
+**StatLearningFinal** is a machine learning pipeline designed to predict **next-day stock returns** using a combination of **news sentiment** and **technical indicators**, and simulate trades based on the model’s predictions.
 
-This project uses:
-- 📰 News sentiment analysis via [FinBERT](https://huggingface.co/yiyanghkust/finbert-tone)
-- 📈 Stock price data from [Alpha Vantage](https://www.alphavantage.co/)
-- 🧠 A Random Forest classifier to learn stock behavior from sentiment + technical features
+This project includes:
+- 📥 News collection via [Alpaca Markets](https://alpaca.markets/)
+- 💬 Sentiment analysis using [VADER](https://github.com/cjhutto/vaderSentiment)
+- 📈 Technical feature generation using the `ta` library
+- 🤖 Predictive modeling with XGBoost
+- 💰 Trade simulation based on predicted position sizing
 
 ---
 
 ## 🚀 Features
 
-- Pulls stock price data dynamically using Alpha Vantage's free API
-- Gathers financial news using NewsAPI or fallback dummy articles
-- Uses FinBERT (a BERT model fine-tuned for financial sentiment) to score news
-- Creates labeled training data based on next-day price movement
-- Trains and evaluates a binary classifier (`up` vs. `down`)
-- Prints accuracy, precision, recall, and F1-score
+- Dynamically collects stock-specific news headlines using Alpaca's API
+- Assigns sentiment scores to headlines using NLTK’s VADER
+- Aggregates daily sentiment scores for each ticker
+- Merges news data with historical stock prices (AAPL, GOOGL)
+- Engineers technical indicators: RSI, EMA, MACD, PVT, OBV, etc.
+- Trains an **XGBoost Regressor** to predict forward returns
+- Uses predictions to simulate profit/loss based on trade sizing
+- Visualizes cumulative profit over time
 
 ---
 
-## 📦 Requirements
+## 📂 Files
+
+- `alpaca.ipynb`: Collects and saves raw news headlines from the Alpaca API
+- `analysis.ipynb`: Scores sentiment, engineers features, trains the model, and simulates trading results
+
+---
+
+## 🧰 Requirements
 
 ```bash
-pip install pandas numpy scikit-learn yfinance requests transformers torch
+pip install pandas numpy plotly ta xgboost scikit-learn nltk python-dotenv
 ```
 
 Also:
-- Get a **free API key** from [Alpha Vantage](https://www.alphavantage.co/support/#api-key)
-- Get a **free API key** from [NewsAPI.org](https://newsapi.org/)
+- Get a **free API key** from [Alpaca](https://alpaca.markets/)
+- Make sure to set up a `.env` file containing your Alpaca credentials
 
 ---
 
-## 📂 Usage
+## 📈 Usage
 
-Edit and run the notebook:
-
-```python
-ticker = "AAPL"  # or "TSLA", "NVDA", etc.
-```
-
-Adjust the date range:
-
-```python
-from datetime import datetime, timedelta
-end_date = datetime.today().date() - timedelta(days=1)
-start_date = end_date - timedelta(days=90)
-```
-
-Then run the full pipeline:
-- `get_stock_data()`
-- `get_news_articles()`
-- `analyze_sentiment()`
-- `merge_and_label()`
-- `train_and_evaluate()`
+1. Run `alpaca.ipynb` to fetch financial news and store in CSV format
+2. Run `analysis.ipynb` to:
+   - Load the news and historical stock price data
+   - Score headlines with sentiment
+   - Compute technical indicators
+   - Train the XGBoost regression model
+   - Simulate trading and compute profit
 
 ---
 
-## 📊 Example Output
+## 📊 Example Results
 
-```
-Accuracy: 0.57
-Precision: 0.40
-Recall: 1.00
-```
+- Profit over 1.5 years: **$953.45** from an initial $4,000
+- Total Return: **+23.8%**
+- Annual Percentage Yield (APY): **15.8%**
+- Outperforms typical portfolio manager APYs (~5%)
 
 ---
 
 ## 🤝 Contributors
 
-- Itay Akad
-- Gilad Bejerano
+- Itay Akad  
+- Gilad Bejerano  
 - Nir Oren
